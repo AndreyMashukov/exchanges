@@ -1,0 +1,50 @@
+{
+    "name": "andrey-mashukov/exchanges",
+    "keywords": ["exchanges_services", "exchange_rates"],
+    "homepage": "https://github.com/AndreyMashukov/exchanges",
+    "description": "Exchanges api tools",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrey Mashukov",
+            "email": "a.mashukov@yandex.ru",
+            "role": "Developer"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "AM\\Exchanges\\": ["src"],
+            "AM\\Exchanges\\Traits\\": ["src/traits"]
+        },
+        "classmap": [
+            "src",
+            "src/traits"
+        ]
+    },
+    "require": {
+        "php": ">=7",
+        "logics/http": "*",
+        "andrey-mashukov/crossrates": "^0.1",
+        "ext-mbstring": "*",
+        "ext-json": "*"
+    },
+    "autoload-dev" : {
+        "psr-4" : {
+            "Tests\\": ["tests"]
+        }
+    },
+    "require-dev": {
+        "pdepend/pdepend": "^2.2",
+        "phpmd/phpmd": "^2.4",
+        "phploc/phploc": "^2.1",
+        "sebastian/phpcpd": "^2.0",
+        "phpdocumentor/phpdocumentor": "^2.9",
+        "mamuz/php-dependency-analysis": "^0.6",
+        "phpunit/phpunit": "^5.2",
+        "logics/phpunit-extensions": "^0.2||dev-trunk",
+        "logics/codesniffer": "^0.1||dev-trunk",
+        "logics/extcheck": "^0.1||dev-trunk",
+        "ext-dom": "*"
+    },
+    "prefer-stable": true
+}

@@ -19,6 +19,13 @@ use \AM\Exchanges\Responder;
 class BitfinexResponder extends Responder
     {
 
+    /**
+     * BitfinexResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
 	/**
 	 * Cached request
@@ -31,21 +38,13 @@ class BitfinexResponder extends Responder
 
 	private function _cachedRequest(string $url, string $key):string
 	    {
-		if (defined("EXCHANGE_CACHE_DIR") === true && BITFINEX_CACHE_ON === true)
+            if (defined('BITFINEX_CACHE_ON') === true && BITFINEX_CACHE_ON === true)
 		    {
-			if ($this->getTimeDifference($key) > BITFINEX_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = $this->makeRequest($url, $key, [], [], true);
-			    }
-			else
-			    {
-				$result = $this->getCache($url);
-			    } //end if
-
+                $result = $this->makeRequest($url, [], [], true, BITFINEX_REQUESTS_LIMIT);
 		    }
 		else
 		    {
-			$result = $this->makeRequest($url, $key);
+                $result = $this->makeRequest($url);
 		    } //end if
 
 		return $result;

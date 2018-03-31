@@ -49,8 +49,6 @@ class BitfinexResponderTest extends TestCase
 
 	protected function setUp()
 	    {
-		mkdir(__DIR__ . "/cache");
-
 		$this->remotepath = $this->webserverURL();
 		$this->host       = $this->remotepath . "/datasets/bitfinex";
 
@@ -167,19 +165,19 @@ class BitfinexResponderTest extends TestCase
 	    {
 		$responder = new Responder();
 		$json      = $responder->getTicker("ALL", "EUR", "json");
-//		file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur.json", $json);
+            //file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur.json", $json);
 		$expected  = file_get_contents(__DIR__ . "/datasets/bitfinex/expected_eur.json");
 
 		$this->assertEquals($expected, $json);
 
 		$json     = $responder->getTicker("USDT_BTC", "EUR", "json");
-//		file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur_btc.json", $json);
+            //file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur_btc.json", $json);
 
 		$expected = file_get_contents(__DIR__ . "/datasets/bitfinex/expected_eur_btc.json");
 		$this->assertEquals($expected, $json);
 
 		$json     = $responder->getTicker("USDT_LTC", "USDT", "json");
-//		file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur_ltc.json", $json);
+            //file_put_contents(__DIR__ . "/datasets/bitfinex/expected_eur_ltc.json", $json);
 		$expected = file_get_contents(__DIR__ . "/datasets/bitfinex/expected_eur_ltc.json");
 		$this->assertEquals($expected, $json);
 	    } //end testShouldAllowToGetJsonWithTickersData()

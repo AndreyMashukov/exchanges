@@ -49,8 +49,6 @@ class KrakenResponderTest extends TestCase
 
 	protected function setUp()
 	    {
-		mkdir(__DIR__ . "/cache");
-
 		$this->remotepath = $this->webserverURL();
 		$this->host       = $this->remotepath . "/datasets/kraken";
 

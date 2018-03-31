@@ -49,8 +49,6 @@ class BitstampResponderTest extends TestCase
 
 	protected function setUp()
 	    {
-		mkdir(__DIR__ . "/cache");
-
 		$this->remotepath = $this->webserverURL();
 		$this->host       = $this->remotepath . "/datasets/bitstamp";
 

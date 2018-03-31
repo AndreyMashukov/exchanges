@@ -19,6 +19,14 @@ use \AM\Exchanges\Responder;
 class PoloniexResponder extends Responder
     {
 
+    /**
+     * PoloniexResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 	/**
 	 * Get tickers data
 	 *
@@ -31,21 +39,13 @@ class PoloniexResponder extends Responder
 	    {
 		$url = POLONIEX_URL . "/public?command=returnTicker";
 
-		if (defined("EXCHANGE_CACHE_DIR") === true && POLONIEX_CACHE_ON === true)
+            if (defined('POLONIEX_CACHE_ON') === true && POLONIEX_CACHE_ON === true)
 		    {
-			if ($this->getTimeDifference("poloniex") > POLONIEX_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = json_decode($this->makeRequest($url, "poloniex", [], [], true), true);
-			    }
-			else
-			    {
-				$result = json_decode($this->getCache($url), true);
-			    } //end if
-
+                $result = json_decode($this->makeRequest($url, [], [], true), true, POLONIEX_REQUESTS_LIMIT);
 		    }
 		else
 		    {
-			$result = json_decode($this->makeRequest($url, "poloniex"), true);
+                $result = json_decode($this->makeRequest($url), true);
 		    } //end if
 
 		if ($name === "ALL")

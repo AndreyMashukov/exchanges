@@ -19,6 +19,14 @@ use \AM\Exchanges\Responder;
 class KrakenResponder extends Responder
     {
 
+    /**
+     * KrakenResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 	/**
 	 * Get tickers data
 	 *
@@ -57,21 +65,12 @@ class KrakenResponder extends Responder
 			$url = KRAKEN_URL . "/0/public/Ticker?pair=" . $name;
 		    } //end if
 
-		if (defined("EXCHANGE_CACHE_DIR") === true && KRAKEN_CACHE_ON === true)
-		    {
-			if ($this->getTimeDifference("kraken" . $name) > KRAKEN_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = $this->makeRequest($url, "kraken" . $name, [], [], true);
-			    }
-			else
-			    {
-				$result = $this->getCache($url);
-			    } //end if
-
+            if (defined('KRAKEN_CACHE_ON') === true && KRAKEN_CACHE_ON === true) {
+                $result = $this->makeRequest($url, [], [], true, KRAKEN_REQUESTS_LIMIT);
 		    }
 		else
 		    {
-			$result = $this->makeRequest($url, "kraken" . $name);
+                $result = $this->makeRequest($url);
 		    } //end if
 
 		return $this->_convertAnswer(json_decode($result, true));

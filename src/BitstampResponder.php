@@ -19,6 +19,14 @@ use \AM\Exchanges\Responder;
 class BitstampResponder extends Responder
     {
 
+    /**
+     * BitstampResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 	/**
 	 * Get tickers data
 	 *
@@ -48,21 +56,12 @@ class BitstampResponder extends Responder
 			$url = BITSTAMP_URL . "/api/v2/ticker/" . $name;
 		    } //end if
 
-		if (defined("EXCHANGE_CACHE_DIR") === true && BITSTAMP_CACHE_ON === true)
-		    {
-			if ($this->getTimeDifference("bitstamp" . $name) > BITSTAMP_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = $this->makeRequest($url, "bitstamp" . $name, [], [], true);
-			    }
-			else
-			    {
-				$result = $this->getCache($url);
-			    } //end if
-
-		    }
+		if (defined("EXCHANGE_CACHE_DIR") === true && BITSTAMP_CACHE_ON === true) {
+            $result = $this->makeRequest($url, [], [], true, BITSTAMP_REQUESTS_LIMIT);
+        }
 		else
 		    {
-			$result = $this->makeRequest($url, "bitstamp" . $name);
+                $result = $this->makeRequest($url);
 		    } //end if
 
 		return $this->_convertAnswer(json_decode($result, true), $name);

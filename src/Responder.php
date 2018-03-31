@@ -25,7 +25,30 @@ abstract class Responder
 
 	use Exchange;
 
-	/**
+    /**
+     * @var \Memcached
+     */
+    private $memcached = null;
+
+    /**
+     * Responder constructor.
+     */
+    public function __construct()
+    {
+        if (
+            defined('BINANCE_CACHE_ON') === true && BINANCE_CACHE_ON === true ||
+            defined('POLONIEX_CACHE_ON') === true && POLONIEX_CACHE_ON === true ||
+            defined('KRAKEN_CACHE_ON') === true && KRAKEN_CACHE_ON === true ||
+            defined('BITSTAMP_CACHE_ON') === true && BITSTAMP_CACHE_ON === true ||
+            defined('BITFINEX_CACHE_ON') === true && BITFINEX_CACHE_ON === true ||
+            defined('BITTREX_CACHE_ON') === true && BITTREX_CACHE_ON === true
+        ) {
+            $this->memcached = new \Memcached();
+            $this->memcached->addServer('127.0.0.1', 11211);
+        }
+    }
+
+    /**
 	 * Get tickers data
 	 *
 	 * @param string $name Name of ticker
@@ -119,19 +142,14 @@ abstract class Responder
 	 *
 	 * @param string $url    Request URL
 	 * @param string $result Request result
+     * @param int $expire Expire time
 	 *
 	 * @return void
 	 */
 
-	protected function setCache(string $url, string $result)
+    protected function setCache(string $url, string $result, int $expire)
 	    {
-		$cachedir = EXCHANGE_CACHE_DIR . "/cache";
-		if (file_exists($cachedir) === false)
-		    {
-			mkdir($cachedir);
-		    } //end if
-
-		file_put_contents($cachedir . "/" . md5($url), $result);
+            $this->memcached->set(md5($url), $result, $expire);
 	    } //end setCache()
 
 
@@ -140,88 +158,50 @@ abstract class Responder
 	 *
 	 * @param string $url Request URL
 	 *
-	 * @return string Last good request result
+     * @return string|bool Last request result
 	 */
 
-	protected function getCache(string $url):string
+    protected function getCache(string $url)
 	    {
-		$cachedir = EXCHANGE_CACHE_DIR . "/cache";
-		$cache    = $cachedir . "/" . md5($url);
-
-		if (file_exists($cache) === true)
-		    {
-			return file_get_contents($cache);
-		    }
-		else
-		    {
-			return "";
-		    } //end if
-
+            return $this->memcached->get(md5($url));
 	    } //end getCache()
-
-
-	/**
-	 * Get last request time difference
-	 *
-	 * @param string $key Unique key of service
-	 *
-	 * @return int Time difference
-	 */
-
-	protected function getTimeDifference(string $key):int
-	    {
-		$now  = new DateTime("now", new DateTimezone("UTC"));
-		$last = EXCHANGE_CACHE_DIR . "/" . md5("last_" . $key) . ".txt";
-
-		if (file_exists($last) === false)
-		    {
-			$tosave = new DateTime("now", new DateTimezone("UTC"));;
-			$tosave->sub(new DateInterval('PT21S'));
-			file_put_contents($last, $tosave->format("d.m.Y H:i:s"));
-		    } //end if
-
-		$lasttime = new DateTime(file_get_contents($last), new DateTimezone("UTC"));
-		return ($now->getTimestamp() - $lasttime->getTimestamp());
-	    } //end getTimeDifference()
 
 
 	/**
 	 * Make HTTP Request
 	 *
 	 * @param string $url     Request URL
-	 * @param string $key     Unique key of service
 	 * @param array  $request Request parameters
 	 * @param array  $headers Request headers
 	 * @param bool   $cache   Cache using flag
+     * @param int $expire Cache expire time
 	 *
 	 * @return string Request result
 	 */
 
-	protected function makeRequest(string $url, string $key = "", array $request = [], array $headers = [], bool $cache = false):string
-	    {
-		$http   = new HTTPclient($url, $request, $headers);
-		$result = $http->get();
+    protected function makeRequest(
+        string $url,
+        array $request = [],
+        array $headers = [],
+        bool $cache = false,
+        int $expire = 10
+    ): string
+    {
+        $result = false;
 
-		if ($cache !== false)
-		    {
-			$now  = new DateTime("now", new DateTimezone("UTC"));
-			$last = EXCHANGE_CACHE_DIR . "/" . md5("last_" . $key) . ".txt";
+        if (true === $cache) {
+            $result = $this->getCache($url);
+        }
 
-			if ($http->lastcode() !== 200)
-			    {
-				$now->add(new DateInterval('PT600S'));
-				$result = $this->getCache($url);
-			    }
-			else
-			    {
-				$this->setCache($url, $result);
-			    } //end if
+        if ($result === false) {
+            $http = new HTTPclient($url, $request, $headers);
+            $result = $http->get();
+            if (true === $cache) {
+                $this->setCache($url, $result, $expire);
+            }
+        }
 
-			file_put_contents($last, $now->format("d.m.Y H:i:s"));
-
-		    } // end if
-
-		return $result;
+        return $result;
 	    } //end makeRequest()
 
 

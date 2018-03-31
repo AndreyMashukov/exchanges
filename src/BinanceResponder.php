@@ -19,7 +19,15 @@ use \AM\Exchanges\Responder;
 class BinanceResponder extends Responder
     {
 
-	/**
+    /**
+     * BinanceResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
 	 * Get tickers data
 	 *
 	 * @param string $name Name of ticker
@@ -38,23 +46,13 @@ class BinanceResponder extends Responder
 			$url = BINANCE_URL . "/api/v1/ticker/24hr?symbol=" . $name;
 		    } //end if
 
-		if (defined("EXCHANGE_CACHE_DIR") === true && BINANCE_CACHE_ON === true)
-		    {
-			if ($this->getTimeDifference("binance" . $name) > BINANCE_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = $this->makeRequest($url, "binance" . $name, [], [], true);
-			    }
-			else
-			    {
-				$result = $this->getCache($url);
-			    } //end if
-
+            if (defined('BINANCE_CACHE_ON') === true && BINANCE_CACHE_ON === true) {
+                $result = $this->makeRequest($url, [], [], true, BINANCE_REQUESTS_LIMIT);
 		    }
 		else
 		    {
-			$result = $this->makeRequest($url, "binance" . $name);
+                $result = $this->makeRequest($url);
 		    } //end if
-
 
 		return $this->_convertAnswer(json_decode($result, true));
 	    } //end getTickerData()

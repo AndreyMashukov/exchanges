@@ -19,6 +19,14 @@ use \AM\Exchanges\Responder;
 class BittrexResponder extends Responder
     {
 
+    /**
+     * BittrexResponder constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
 	/**
 	 * Get tickers data
 	 *
@@ -38,21 +46,12 @@ class BittrexResponder extends Responder
 			$url = BITTREX_URL . "/public/getmarketsummary?market=" . strtolower($name);
 		    } //end if
 
-		if (defined("EXCHANGE_CACHE_DIR") === true && BITTREX_CACHE_ON === true)
-		    {
-			if ($this->getTimeDifference("bittrex" . $name) > BITTREX_REQUESTS_LIMIT || $this->getCache($url) === "")
-			    {
-				$result = $this->makeRequest($url, "bittrex" . $name, [], [], true);
-			    }
-			else
-			    {
-				$result = $this->getCache($url);
-			    } //end if
-
+            if (defined('BITTREX_CACHE_ON') === true && BITTREX_CACHE_ON === true) {
+                $result = $this->makeRequest($url, [], [], true, BITTREX_REQUESTS_LIMIT);
 		    }
 		else
 		    {
-			$result = $this->makeRequest($url, "bittrex" . $name);
+                $result = $this->makeRequest($url);
 		    } //end if
 
 		return $this->_convertAnswer(json_decode($result, true));

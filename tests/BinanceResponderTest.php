@@ -49,8 +49,6 @@ class BinanceResponderTest extends TestCase
 
 	protected function setUp()
 	    {
-		mkdir(__DIR__ . "/cache");
-
 		$this->remotepath = $this->webserverURL();
 		$this->host       = $this->remotepath . "/datasets/binance";
 
@@ -195,7 +193,6 @@ class BinanceResponderTest extends TestCase
 
 	public function testShouldSaveOftenRequestsData()
 	    {
-		define("EXCHANGE_CACHE_DIR", __DIR__ . "/cache");
 		define("BINANCE_CACHE_ON", true);
 		define("BINANCE_REQUESTS_LIMIT", 20);
 

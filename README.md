@@ -1,7 +1,7 @@
-# exchanges
+# Exchanges
 Crypto exchange rates
 
-This package provide ability to get tickers from crypto exchanges, such as: Binance, Bitfinex, Bitstamp, Bittrex, Bloomberg, Kraken, Poloniex
+This package provide ability to get tickers from crypto exchanges API, such as: Binance, Bitfinex, Bitstamp, Bittrex, Bloomberg, Kraken, Poloniex
 
 ## Instalation
 

@@ -8,8 +8,6 @@
 
 namespace AM\Exchanges;
 
-use \AM\Exchanges\Responder;
-
 /**
  * Responder for API poloniex
  *

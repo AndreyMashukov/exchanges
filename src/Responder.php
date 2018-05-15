@@ -8,10 +8,7 @@
 
 namespace AM\Exchanges;
 
-use \DateTime;
-use \DateTimezone;
-use \DateInterval;
-use \Logics\Foundation\HTTP\HTTPclient;
+use \Agentzilla\HTTP\HTTPclient;
 use \AM\Exchanges\Traits\Exchange;
 
 /**
@@ -196,6 +193,7 @@ abstract class Responder
         if ($result === false) {
             $http = new HTTPclient($url, $request, $headers);
             $result = $http->get();
+
             if (true === $cache) {
                 $this->setCache($url, $result, $expire);
             }

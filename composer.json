@@ -23,7 +23,7 @@
     },
     "require": {
         "php": ">=7",
-        "logics/http": "*",
+        "agentzilla/http": "^0.1",
         "andrey-mashukov/crossrates": "^0.1",
         "ext-mbstring": "*",
         "ext-json": "*"

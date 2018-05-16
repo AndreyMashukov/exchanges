@@ -24,7 +24,7 @@
     "require": {
         "php": ">=7",
         "agentzilla/http": "^0.1",
-        "andrey-mashukov/crossrates": "^0.1",
+        "andrey-mashukov/crossrates": "^1.0",
         "ext-mbstring": "*",
         "ext-json": "*"
     },
